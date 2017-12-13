@@ -8,10 +8,22 @@ let mealId = 0
 class Delivery {
   constructor(meal, customer){
     // debugger
-    this.mealId = meal.id
-    this.customerId = customer.id
+    if (customer){this.mealId = meal.id}
+    if (meal) {this.customerId = customer.id}
     this.id = ++deliveryId
     store.deliveries.push(this)
+  }
+
+  meal(){
+    return store.meals.find( meal => {
+      return meal.id === this.mealId
+    })
+  }
+
+  customer(){
+    return store.customers.find( customer => {
+      return customer.id === this.customerId
+    })
   }
 }
 
@@ -32,7 +44,7 @@ class Meal {
   }
   static byPrice(){
     return store.meals.sort(function(a, b){
-      return b.price - a.price 
+      return b.price - a.price
     })
   }
 }
@@ -40,8 +52,28 @@ class Meal {
 class Customer {
   constructor(name, employer) {
     this.name = name
-    this.employerId = employer.id
+    if (employer){this.employerId = employer.id}
     this.id = ++customerId
     store.customers.push(this)
+  }
+
+  deliveries(){
+    return store.deliveries.filter( delivery =>{
+      return delivery.customerId === this.id
+    })
+  }
+
+  meals(){
+    return this.deliveries().map(delivery =>{
+      return delivery.meal()
+    })
+  }
+
+  totalSpent(){
+    let sum = 0
+    for(const meal of this.meals()){
+        sum += meal.price
+      }
+    return sum
   }
 }
