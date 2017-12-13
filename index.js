@@ -135,19 +135,17 @@ class Employer {
     return arr2.unique()
   }
 
-  mealTotals(){
-    let obj = {}
-    for (let employee of this.employees()){
-      for (let meal of employee.meals()){
-        if (obj.hasOwnProperty(meal)){
-          obj[meal] ++
-        }
-        else{
-          obj[meal] = 1
-        }
-      }
-    }
-    console.log(obj)
-    return obj
-  }
+  mealTotals() {
+   let allMeals = this.deliveries().map(delivery => {
+     return delivery.meal();
+   });
+   let summaryObject = {};
+   allMeals.forEach(function(meal) {
+     summaryObject[meal.id] = 0;
+   });
+   allMeals.forEach(function(meal) {
+     summaryObject[meal.id] += 1;
+   });
+   return summaryObject;
+ }
 }
