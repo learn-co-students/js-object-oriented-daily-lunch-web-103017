@@ -33,6 +33,52 @@ class Employer {
     this.id = ++employerId
     store.employers.push(this)
   }
+
+  employees(){
+    return store.customers.filter( (customer) => {
+      return customer.employerId === this.id
+    })
+  }
+
+  deliveries(){
+    const arr = []
+    for (const customer of this.employees()){
+      console.log(typeof customer.deliveries())
+      // console.log(Array.prototype.customer.deliveries())
+      for (const delivery of customer.deliveries()){
+        arr.push(delivery)
+      }
+    }
+    return arr
+  }
+
+  meals(){
+    const arr = []
+    this.employees().map(employee => {
+      employee.meals().forEach(meal => {
+        if (!arr.includes(meal)){
+          arr.push(meal)
+        }
+      })
+    })
+    return arr
+  }
+
+  mealTotals(){
+    const output = {}
+    // console.log(this.meals())
+    for (const meal of this.meals()){
+      // console.log(meal.id)
+      output[meal.id] = 0
+      for (const delivery of this.deliveries()){
+        if (delivery.mealId === meal.id){
+          output[meal.id] += 1
+        }
+      }
+    }
+    return output
+  }
+
 }
 
 class Meal {
@@ -47,6 +93,17 @@ class Meal {
       return b.price - a.price
     })
   }
+  deliveries(){
+    return store.deliveries.filter((delivery) => {
+      return delivery.mealId === this.id
+    })
+  }
+  customers(){
+    return this.deliveries().map((delivery) => {
+      return delivery.customer()
+    })
+  }
+
 }
 
 class Customer {
