@@ -43,7 +43,7 @@ class Employer {
   deliveries(){
     const arr = []
     for (const customer of this.employees()){
-      console.log(typeof customer.deliveries())
+      // console.log(typeof customer.deliveries())
       // console.log(Array.prototype.customer.deliveries())
       for (const delivery of customer.deliveries()){
         arr.push(delivery)
