@@ -1,6 +1,6 @@
 let store = {customers: [], employers: [], meals: [], deliveries: []}
 
-let customerId = 0 
+let customerId = 0
 class Customer {
   constructor(name, employer){
     this.name = name;
@@ -159,16 +159,3 @@ class Delivery {
     }.bind(this))
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
