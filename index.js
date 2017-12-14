@@ -15,27 +15,14 @@ class Customer{
     store.customers.push(this);
   }
   deliveries(){
-    return store.deliveries.filter((delivery) => this.id === delivery.customerId)
+    return store.deliveries.filter((delivery) => {return this.id === delivery.customerId})
   }
   meals(){
-    const mealIds = this.deliveries().map(function(delivery){
-      return delivery.mealId;
-    })
-    const meals = []
-    for(const id of mealIds){
-      const cust = store.meals.find(function(meal){return meal.id === id})
-      meals.push(cust)
-    }
-    return meals
+    return this.deliveries().map(function(delivery){return delivery.meal()})
   }
 
   totalSpent(){
-    const delCust = store.deliveries.filter((delivery) => {return this.id === delivery.customerId })
-    const meals = []
-    for (const del of delCust){
-      meals.push(del.meal())
-    }
-    return meals.reduce(function(acc, meal, meals){return acc + meal.price},0)
+    return this.meals().reduce(function(acc, meal, meals){return acc + meal.price},0)
   }
 }
 
@@ -53,15 +40,9 @@ class Meal{
     return store.deliveries.filter((delivery) => this.id === delivery.mealId)
   }
   customers(){
-    const customerIds = this.deliveries().map(function(delivery){
-      return delivery.customerId;
+    return this.deliveries().map(function(delivery){
+      return delivery.customer();
     })
-    const customers = []
-    for(const id of customerIds){
-      const cust = store.customers.find(function(customer){return customer.id === id})
-      customers.push(cust)
-    }
-    return customers
   }
 }
 
@@ -96,18 +77,13 @@ class Employer{
     return store.customers.filter((customer) => {return this.id === customer.employerId})
   }
   deliveries(){
-    const employees = this.employees()
     const deliveries = [];
-    employees.forEach(function(employee){
-      const empDelv = employee.deliveries();
-      for(const del of empDelv){
-        deliveries.push(del)
-      }
+    this.employees().forEach(function(employee){
+      deliveries.push.apply(deliveries, employee.deliveries())
     })
     return deliveries;
   }
   meals(){
-    const employees = this.employees()
     const meals = [];
     // employees.forEach(function(employee){
     //   const empDelv = employee.meals();
@@ -115,9 +91,8 @@ class Employer{
     //     meals.push(del)
     //   }
     // })
-    employees.forEach(function(employee){
-      const empDelv = employee.meals();
-      meals.push.apply(meals, empDelv)
+    this.employees().forEach(function(employee){
+      meals.push.apply(meals, employee.meals())
     })
 
     return [...new Set(meals)];
