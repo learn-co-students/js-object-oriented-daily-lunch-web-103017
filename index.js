@@ -15,7 +15,9 @@ class Customer{
     store.customers.push(this);
   }
   deliveries(){
-    return store.deliveries.filter((delivery) => {return this.id === delivery.customerId})
+    //Both bind and arrow functions work
+    // return store.deliveries.filter((delivery) => {return this.id === delivery.customerId})
+    return store.deliveries.filter(function(delivery){return this.id === delivery.customerId}.bind(this))
   }
   meals(){
     return this.deliveries().map(function(delivery){return delivery.meal()})
@@ -58,7 +60,8 @@ class Delivery{
     store.deliveries.push(this);
   }
   meal(){
-    return store.meals.find((meal) => {return meal.id === this.mealId})
+    // return store.meals.find((meal) => {return meal.id === this.mealId})
+    return store.meals.find(function(meal){return meal.id === this.mealId}.bind(this))
   }
   customer(){
     return store.customers.find((customer) => {return customer.id === this.customerId})
